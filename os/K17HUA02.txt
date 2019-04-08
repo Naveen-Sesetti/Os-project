@@ -1,0 +1,132 @@
+#include<iostream>
+using namespace std;
+int main()
+{
+int i,max=1;
+int num;
+float total_waiting=0,total_trunaround=0;
+int nprocess,j,arrival[50],brust[50],time=5000,rprocess[50],m;
+int end[40];
+char p[50][40];
+int timeq1=6,timeq2=10,waiting[40],trunaround[40],total_time,average_wait,average_trunaround;
+cout<<"Enter the No of processes =";
+cin>>nprocess;
+for (i = 0; i < nprocess; i++)
+{
+cout<<"\narrival time  of process p"<<i+1<<" ";
+cin>>arrival[i];
+cout<<"\nbrust time of process P"<<i+1<<" ";	
+cin>>brust[i];
+}
+for (i = 0; i < nprocess; i++)
+{
+	if (arrival[i]<time)
+	{
+		time=arrival[i];
+	}
+}
+for(m= 0; m < 3; m++)
+{
+    	if (m==0)
+		{
+		for ( i = 0; i < nprocess; i++)
+		{
+			if (time<arrival[i])
+			{
+				time=arrival[i];
+			}
+			if (brust[i]>timeq1)
+			{
+				rprocess[i]=brust[i]-timeq1;
+				time=time+timeq1;
+			}
+			else if (brust[i]<=timeq1 )
+			{
+			time=time+brust[i];
+             rprocess[i]=0;
+             end[i]=time;
+			}
+			}
+		}
+		if (m==1)
+		{
+		for ( i = 0; i < nprocess; i++)
+		{
+			if (rprocess[i]>timeq2 && rprocess[i]!=0)
+			{	
+				rprocess[i]=rprocess[i]-timeq2;
+				time=time+timeq2;
+				end[i]=time;
+			}
+			else if (rprocess[i]<=timeq2 && rprocess[i]!=0)
+			{
+			time=time+rprocess[i];
+            rprocess[i]=0;
+            end[i]=time;
+			}
+		}
+	}
+		if (m==2 )
+		{	
+		for (i = 0; i < nprocess; i++)
+		{
+         if (rprocess[i]!=0)
+         {
+         	max=rprocess[i];
+         	if (max<rprocess[i])
+         	{
+         		max=rprocess[i];		
+         	}
+         }
+		}
+		for (i = 0; i < nprocess; i++)
+		{	
+		if (rprocess[i]==max && rprocess[i]!=0)
+		{
+			time=time+rprocess[i];
+			rprocess[i]=0;
+			end[i]=time;	
+		}
+		}		
+}
+   for (i = 0; i < nprocess; i++)
+		{  
+		 if (rprocess[i]==0)
+		{
+			trunaround[i]=end[i]-arrival[i];
+			waiting[i]=trunaround[i]-brust[i];
+			if (waiting[i]<=0)
+			{
+				waiting[i]=0;
+			}
+		}	
+		}
+	}
+	cout<<"Processes    Brust Time     Arrival Time  completion Time   Trunaround Time      Waiting Time\n";
+		for (i = 0; i < nprocess; i++)
+		{  
+		 if (rprocess[i]==0)
+		{
+			
+			cout<<"  "<<i+1<<"           "<<brust[i]<<"                 "<<arrival[i]<<"                   "<<end[i]<<"                   "<<trunaround[i]<<"               "<<waiting[i];
+		}	
+		}
+		for (i = 0; i < nprocess; i++)
+		{ 
+		 if (rprocess[i]==0)
+		{
+		     num++;
+			total_trunaround=(float)total_trunaround+trunaround[i];
+            total_waiting=(float)total_waiting+waiting[i];
+		}
+	}
+		cout<<"\nAverage Waiting Time is equal to"<<total_waiting/num;	
+		cout<<"\nAverage Trunaround Time is equal to"<<total_trunaround/num;
+	for (i = 0; i < nprocess; i++)
+		{  
+		 if (rprocess[i]>0)
+		{
+		cout<<"\n process p"<<i+1<<" was terminated\n";
+		}
+	}
+}
